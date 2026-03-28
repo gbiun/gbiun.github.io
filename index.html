@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,18 +33,26 @@ header .actions{display:flex;gap:10px;align-items:center}
 .btn-primary:hover{background:#2560A0}
 .btn-outline{background:transparent;color:var(--bianco);border:1px solid rgba(255,255,255,.3)}
 .btn-outline:hover{border-color:rgba(255,255,255,.6)}
+.btn-ghost{background:transparent;color:var(--azzurro);border:1px solid var(--grigio-bordo)}
+.btn-ghost:hover{background:var(--azzurro-bg)}
+.btn-sm{padding:5px 10px;font-size:.78rem}
 .login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center}
 .login-screen .logo{font-family:var(--font-d);font-size:2.2rem;color:var(--navy);margin-bottom:8px}
 .login-screen .tagline{color:var(--grigio-testo);margin-bottom:32px;font-size:.95rem}
 .login-screen .btn{font-size:1rem;padding:12px 28px}
 .login-screen .note{margin-top:16px;font-size:.78rem;color:var(--grigio-testo);max-width:380px}
-.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
 .stat-card{background:var(--bianco);border-radius:var(--rad);padding:16px 20px;box-shadow:var(--sh-sm)}
 .stat-card .label{font-size:.75rem;color:var(--grigio-testo);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .stat-card .value{font-family:var(--font-d);font-size:1.6rem}
 .stat-card.red .value{color:var(--rosso)}
 .stat-card.amber .value{color:var(--ambra)}
 .stat-card.green .value{color:var(--verde)}
+/* Filter bar */
+.filter-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.filter-bar select,.filter-bar input{font-family:var(--font-b);font-size:.85rem;padding:7px 12px;border:1px solid var(--grigio-bordo);border-radius:6px;background:var(--bianco);color:var(--navy)}
+.filter-bar input{flex:1;min-width:180px;max-width:300px}
+.filter-bar select{min-width:140px}
 .tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--grigio-bordo);padding-bottom:0}
 .tab{padding:10px 18px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;background:none;color:var(--grigio-testo);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
 .tab.active{color:var(--navy);border-bottom-color:var(--azzurro)}
@@ -63,9 +71,10 @@ header .actions{display:flex;gap:10px;align-items:center}
 .client-card .card-body .field .fv{font-weight:500;text-align:right;max-width:60%}
 .card-alerts{padding:10px 20px 14px;border-top:1px solid var(--grigio-l)}
 .card-alerts .alert-item{font-size:.78rem;padding:3px 0;display:flex;gap:6px;align-items:flex-start}
+.card-note{padding:8px 20px 12px;border-top:1px solid var(--grigio-l);font-size:.78rem;color:var(--azzurro);font-style:italic}
 .detail-overlay{position:fixed;inset:0;background:rgba(0,30,51,.4);z-index:100;display:none;justify-content:flex-end}
 .detail-overlay.open{display:flex}
-.detail-panel{width:560px;max-width:90vw;background:var(--bianco);height:100%;overflow-y:auto;padding:28px;animation:slideIn .25s ease;position:relative}
+.detail-panel{width:600px;max-width:90vw;background:var(--bianco);height:100%;overflow-y:auto;padding:28px;animation:slideIn .25s ease;position:relative}
 @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
 .detail-panel .close-btn{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--grigio-testo)}
 .detail-panel h2{font-family:var(--font-d);font-size:1.4rem;margin-bottom:4px}
@@ -83,6 +92,17 @@ header .actions{display:flex;gap:10px;align-items:center}
 .detail-issues{list-style:none}
 .detail-issues li{padding:6px 0;border-bottom:1px solid var(--grigio-l);font-size:.82rem;display:flex;gap:8px;align-items:flex-start}
 .detail-issues li:last-child{border:none}
+/* Note & RAG override */
+.note-area{width:100%;min-height:60px;font-family:var(--font-b);font-size:.82rem;border:1px solid var(--grigio-bordo);border-radius:6px;padding:8px;resize:vertical}
+.rag-override{display:flex;gap:8px;align-items:center;margin-top:8px}
+.rag-btn{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:all .15s}
+.rag-btn:hover{transform:scale(1.2)}
+.rag-btn.selected{border-color:var(--navy)}
+.rag-btn.rb{background:var(--rosso)}.rag-btn.ab{background:var(--ambra)}.rag-btn.gb{background:var(--verde)}
+.rag-btn.auto{background:var(--grigio-bordo);font-size:.6rem;display:flex;align-items:center;justify-content:center;width:28px;height:28px;color:var(--grigio-testo);font-weight:600}
+/* Reminder form */
+.reminder-form{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.reminder-form input{font-family:var(--font-b);font-size:.82rem;padding:6px 10px;border:1px solid var(--grigio-bordo);border-radius:6px;flex:1;min-width:120px}
 .timeline-container{background:var(--bianco);border-radius:var(--rad);padding:24px;box-shadow:var(--sh-sm)}
 .timeline-month{margin-bottom:20px}
 .timeline-month h3{font-family:var(--font-d);font-size:1rem;margin-bottom:10px;color:var(--navy-l)}
@@ -101,24 +121,45 @@ header .actions{display:flex;gap:10px;align-items:center}
 .loading{text-align:center;padding:60px 20px;color:var(--grigio-testo)}
 .spinner{width:36px;height:36px;border:3px solid var(--grigio-bordo);border-top-color:var(--azzurro);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:var(--bianco);padding:12px 24px;border-radius:8px;font-size:.85rem;z-index:200;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @media(max-width:640px){
   header{flex-direction:column;gap:12px;text-align:center}
   .client-grid{grid-template-columns:1fr}
   .detail-panel{width:100%}
   .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .filter-bar{flex-direction:column}
 }
 </style>
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:_ApprovalStatus msdt:dt="string">0</mso:_ApprovalStatus>
+<mso:_ApprovalAssignedTo msdt:dt="string"></mso:_ApprovalAssignedTo>
+<mso:_ApprovalRespondedBy msdt:dt="string"></mso:_ApprovalRespondedBy>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
 </head>
 <body>
 <div class="app" id="app"></div>
 <script>
 const CONFIG={
   CLIENT_ID:'1083963361193-cgv85mduiglo8fs1pnbs0to3mnojgkdd.apps.googleusercontent.com',
-  SCOPES:'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/calendar.events'
+  SCOPES:'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/calendar.events',
+  COMPLIANCE_KW:['37001','37301','231','anticorruzione','compliance','audit','odv','sgpc','corruzione','iso 37','rina','sorveglianza','certificazione','riesame']
 };
-let state={loggedIn:false,loading:false,loadingMsg:'',clients:[],events:[],activeTab:'dashboard',detailClient:null,lastRefresh:null};
+let state={loggedIn:false,loading:false,loadingMsg:'',clients:[],events:[],activeTab:'dashboard',detailClient:null,lastRefresh:null,filterRAG:'all',filterSort:'rag',filterSearch:''};
 let tokenClient=null,accessToken=null;
 
+// ===== LOCAL STORAGE helpers =====
+function lsGet(key,def){try{const v=localStorage.getItem('gbc_'+key);return v?JSON.parse(v):def;}catch(e){return def;}}
+function lsSet(key,val){try{localStorage.setItem('gbc_'+key,JSON.stringify(val));}catch(e){}}
+function getNote(sigla){return lsGet('note_'+sigla,'');}
+function setNote(sigla,text){lsSet('note_'+sigla,text);}
+function getRAGOverride(sigla){return lsGet('rag_'+sigla,null);}
+function setRAGOverride(sigla,val){lsSet('rag_'+sigla,val);}
+
+// ===== AUTH =====
 function initAuth(){
   const s=document.createElement('script');
   s.src='https://accounts.google.com/gsi/client';
@@ -129,8 +170,9 @@ function login(){if(tokenClient)tokenClient.requestAccessToken();}
 function handleAuth(r){if(r.error){alert('Errore: '+r.error);return;}accessToken=r.access_token;state.loggedIn=true;render();loadData();}
 function logout(){if(accessToken)google.accounts.oauth2.revoke(accessToken);accessToken=null;state={...state,loggedIn:false,clients:[],events:[],detailClient:null};render();}
 
-async function apiFetch(url){
-  const r=await fetch(url,{headers:{'Authorization':'Bearer '+accessToken}});
+// ===== API =====
+async function apiFetch(url,opts){
+  const r=await fetch(url,{...opts,headers:{...opts?.headers,'Authorization':'Bearer '+accessToken}});
   if(!r.ok)throw new Error('API '+r.status);
   return r.json();
 }
@@ -155,10 +197,27 @@ function dedup(files){
 async function fetchCalEvents(){
   const now=new Date(),fut=new Date(now);fut.setDate(fut.getDate()+60);
   try{const d=await apiFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+encodeURIComponent(now.toISOString())+'&timeMax='+encodeURIComponent(fut.toISOString())+'&singleEvents=true&orderBy=startTime&maxResults=50');
-  return(d.items||[]).map(e=>({id:e.id,title:e.summary||'(senza titolo)',start:e.start?.dateTime||e.start?.date||'',end:e.end?.dateTime||e.end?.date||'',description:e.description||'',isCompliance:e.colorId==='2',location:e.location||''}));}catch(e){return[];}
+  return(d.items||[]).map(e=>{
+    const title=(e.summary||'').toLowerCase();
+    const isCpl=e.colorId==='2'||CONFIG.COMPLIANCE_KW.some(k=>title.includes(k));
+    return{id:e.id,title:e.summary||'(senza titolo)',start:e.start?.dateTime||e.start?.date||'',end:e.end?.dateTime||e.end?.date||'',description:e.description||'',isCompliance:isCpl,location:e.location||''};
+  });}catch(e){return[];}
+}
+// ===== CREATE CALENDAR EVENT =====
+async function createCalEvent(title,dateStr,sigla){
+  const d=parseD(dateStr);if(!d){toast('Data non valida');return;}
+  const startDate=d.toISOString().split('T')[0];
+  const body={summary:title,start:{date:startDate},end:{date:startDate},colorId:'2',description:'Reminder cruscotto GB Consulting - '+sigla};
+  try{
+    await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{
+      method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    toast('Evento creato: '+title);
+  }catch(e){toast('Errore creazione evento');}
 }
 
-// ===== GR PARSER =====
+// ===== GR PARSER (v2 — fix ragione sociale, miglior extraction) =====
 function parseGR(text,fileName){
   const c={sigla:'',ragione_sociale:'',settore:'',sede:'',dimensione:'',fase:'',sistemi:[],scadenza_cert:'',prossimo_audit:'',prossimo_riesame:'',nc_aperte:[],gap_aperti:[],punti_aperti:[],alerts:[],rag:'green',profilo_rischio:'',mandato_tipo:'',_raw:text};
   const fn=fileName.match(/^([A-Z0-9]+)_golden_record/i);
@@ -167,12 +226,28 @@ function parseGR(text,fileName){
   // YAML frontmatter
   const ym=text.match(/^---\s*\n([\s\S]*?)\n---/);
   if(ym){const y=ym[1];c.sigla=yv(y,'sigla')||c.sigla;c.ragione_sociale=yv(y,'ragione_sociale')||'';c.settore=yv(y,'settore')||'';c.sede=yv(y,'sede_legale')||'';c.dimensione=yv(y,'dimensione_dipendenti')||'';}
-  // Table format fallback
-  if(!c.ragione_sociale){c.ragione_sociale=tv(text,'Ragione sociale')||hv(text)||'';c.settore=tv(text,'Settore')||'';c.sede=tv(text,'Sede legale')||tv(text,'Sede')||'';}
+  
+  // Table format fallback for ragione sociale
+  if(!c.ragione_sociale){
+    // Try table field first
+    c.ragione_sociale=tv(text,'Ragione sociale')||tv(text,'Ragione Sociale')||tv(text,'Cliente')||'';
+    // Try heading: "# Golden Record — NOME" or "# NOME"
+    if(!c.ragione_sociale){
+      const hm=text.match(/^#\s+(?:Golden Record\s*[-—]+\s*)?(.+?)$/m);
+      if(hm){
+        let name=hm[1].trim();
+        // Remove "Golden Record" if it's all that's there
+        if(name.toLowerCase()==='golden record')name='';
+        c.ragione_sociale=name;
+      }
+    }
+    c.settore=c.settore||tv(text,'Settore')||'';
+    c.sede=c.sede||tv(text,'Sede legale')||tv(text,'Sede')||'';
+  }
 
   // Stato Compliance
   if(text.match(/ISO 37001/i)){
-    const im=text.match(/ISO 37001\s*\|?\s*(Certificat[ao]|In corso|Implementazione[^|]*)/i);
+    const im=text.match(/ISO 37001\s*\|?\s*(Certificat[ao]|In corso|Implementazione[^|\n]*)/i);
     c.sistemi.push({nome:'ISO 37001',stato:im?im[1].trim():'Presente'});
   }
   if(text.match(/D\.?Lgs\.?\s*231/i)){
@@ -180,27 +255,35 @@ function parseGR(text,fileName){
     c.sistemi.push({nome:'D.Lgs. 231',stato:dm?dm[1].trim():'Presente'});
   }
 
-  // Scadenza cert
-  let sc=text.match(/scad(?:enza)?\.?\s*(?:cert)?\.?\s*[:=]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
-  if(!sc)sc=text.match(/cert[^|]*scad\.?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
-  if(!sc){const m2=text.match(/ABMS[^|]*scad\.?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);if(m2)sc=m2;}
+  // Scadenza cert — multiple patterns
+  let sc=text.match(/scad(?:enza)?\.?\s*(?:cert(?:ificato|ificazione)?)?\.?\s*[:=]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
+  if(!sc)sc=text.match(/cert[^|\n]*scad\.?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
+  if(!sc)sc=text.match(/ABMS[^|\n]*scad\.?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
+  if(!sc)sc=text.match(/scadenza[^|\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
   if(sc)c.scadenza_cert=sc[1];
 
   // Profilo rischio
-  const rk=text.match(/Rischio complessivo\s*:\s*([^\n]+)/i)||text.match(/Rischio complessivo\s*([^\n]+)/i);
+  const rk=text.match(/Rischio complessivo\s*:?\s*([^\n|]+)/i);
   if(rk)c.profilo_rischio=rk[1].replace(/[*_]/g,'').trim();
 
   // Mandato tipo
-  const mt=text.match(/Tipo incarico\s*:\s*([^\n]+)/i);
+  const mt=text.match(/Tipo incarico\s*:?\s*([^\n]+)/i);
   if(mt)c.mandato_tipo=mt[1].trim();
 
   // Fase progetto
-  const fp=text.match(/Fase progetto\s*\|\s*([^|]+)/i)||text.match(/Fase progetto\s*:\s*([^\n]+)/i);
-  if(fp)c.fase=fp[1].trim();
+  const fp=text.match(/Fase progetto\s*\|?\s*([^|\n]+)/i);
+  if(fp)c.fase=fp[1].replace(/[*_]/g,'').trim();
 
-  // Prossimo audit
-  const auditPats=[/audit\s+(?:sorveglianza|interno|RINA|certificazione)[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/gi,/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})[^.\n]*audit/gi];
-  for(const pat of auditPats){let m;while((m=pat.exec(text))!==null){const d=parseD(m[1]);if(d&&d>new Date()&&(!c.prossimo_audit||d<parseD(c.prossimo_audit)))c.prossimo_audit=m[1];}}
+  // Prossimo audit — prioritize RINA/SGS/certificazione over interno
+  const auditCert=[/(?:RINA|SGS|DNV|certificazione|sorveglianza|rinnovo)[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/gi,/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})[^.\n]*(?:RINA|SGS|DNV|certificazione|sorveglianza)/gi];
+  const auditInt=[/audit\s+(?:interno|annuale)[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/gi,/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})[^.\n]*audit\s+(?:interno|annuale)/gi];
+  // Try cert audit first
+  for(const pat of auditCert){let m;while((m=pat.exec(text))!==null){const d=parseD(m[1]);if(d&&d>new Date()&&(!c.prossimo_audit||d<parseD(c.prossimo_audit)))c.prossimo_audit=m[1];}}
+  // Fallback to any audit
+  if(!c.prossimo_audit){
+    const auditAny=[/audit[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/gi,/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})[^.\n]*audit/gi];
+    for(const pat of auditAny){let m;while((m=pat.exec(text))!==null){const d=parseD(m[1]);if(d&&d>new Date()&&(!c.prossimo_audit||d<parseD(c.prossimo_audit)))c.prossimo_audit=m[1];}}
+  }
 
   // Riesame
   const rm=text.match(/[Rr]iesame\s+(?:di\s+)?[Dd]irezione[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i)||text.match(/[Rr]iesame[^.\n]*?(?:CdA|maggio|giugno|aprile)\s+(\d{4})/i);
@@ -216,40 +299,38 @@ function parseGR(text,fileName){
   const raccM=text.match(/(\d+)\s+rilievi?\s+IN CORSO/i);
   if(raccM)c.alerts.push({type:'warning',text:raccM[1]+' rilievi in corso'});
 
-  // GAP (EcoEridania style)
-  const gapRe=/(?:🔴|🟡|🟠)\s*GAP-(\d+)\s*:\s*([^\n]+)/g;
+  // GAP
+  const gapRe=/(?:🔴|🟡|🟠)\s*GAP-(\d+)\s*:?\s*([^\n]+)/g;
   let gm;while((gm=gapRe.exec(text))!==null){
-    const pr=text.substring(gm.index-2,gm.index+2).includes('🔴')?'alta':'media';
+    const pr=text.substring(Math.max(0,gm.index-5),gm.index+5).includes('🔴')?'alta':'media';
     c.gap_aperti.push({id:'GAP-'+gm[1],desc:gm[2].trim().substring(0,120),priority:pr});
   }
 
-  // Punti aperti (A4H style)
+  // Punti aperti
   const paSection=extractSec(text,'Punti Aperti');
   if(paSection){
     const rows=paSection.match(/\|\s*\d+\s*\|[^|]+\|[^|]*(?:🔴|Alta)[^|]*/g);
     if(rows)for(const row of rows){
       const cols=row.split('|').map(x=>x.trim()).filter(Boolean);
-      if(cols.length>=3&&!cols[1].includes('~~')){
+      if(cols.length>=3&&!cols[1].includes('~~'))
         c.punti_aperti.push({tema:cols[1].replace(/\*\*/g,'').replace(/NUOVO\s*-+\s*/,'').substring(0,100),priority:'alta',scadenza:cols.length>3?cols[3]:''});
-      }
     }
   }
 
-  // Alerts (warning symbols)
+  // Alerts
   const warns=text.match(/⚠️[^\n]+/g);
   if(warns)for(const w of warns.slice(0,5)){const at=w.replace('⚠️','').trim();if(at.length>10)c.alerts.push({type:'warning',text:at.substring(0,150)});}
+  if(c.gap_aperti.some(g=>g.priority==='alta'))c.alerts.unshift({type:'critical',text:'GAP ad alta priorita: '+c.gap_aperti.filter(g=>g.priority==='alta').map(g=>g.id).join(', ')});
 
-  // GAP-06 rosso come alert critico
-  if(c.gap_aperti.some(g=>g.priority==='alta'))c.alerts.unshift({type:'critical',text:'GAP ad alta priorita aperti: '+c.gap_aperti.filter(g=>g.priority==='alta').map(g=>g.id).join(', ')});
-
-  // RAG calculation
-  calcRAG(c);
+  // RAG — check override first
+  const override=getRAGOverride(c.sigla);
+  if(override){c.rag=override;c._ragOverride=true;}
+  else calcRAG(c);
   return c;
 }
 
 function yv(yaml,key){const m=yaml.match(new RegExp('^'+key+'\\s*:\\s*"?(.+?)"?\\s*$','mi'));return m?m[1].replace(/^["']|["']$/g,'').trim():null;}
 function tv(text,label){const m=text.match(new RegExp('\\|\\s*'+label+'\\s*\\|\\s*(.+?)\\s*\\|','i'));return m?m[1].trim():null;}
-function hv(text){const m=text.match(/^#\s+(.+?)\s*(?:--|—|$)/m);return m?m[1].trim():null;}
 function extractSec(text,heading){const m=text.match(new RegExp('##\\s*'+heading+'[\\s\\S]*?(?=\\n##\\s|$)','i'));return m?m[0]:null;}
 function parseD(s){if(!s)return null;let m=s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);m=s.match(/(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);const mo={gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};m=s.match(/(\w+)\s+(\d{4})/i);if(m&&mo[m[1].toLowerCase()]!==undefined)return new Date(+m[2],mo[m[1].toLowerCase()],15);return null;}
 
@@ -283,6 +364,18 @@ async function loadData(){
   }catch(e){console.error(e);state.loading=false;render();alert('Errore: '+e.message);}
 }
 
+// ===== FILTERING =====
+function getFilteredClients(){
+  let list=[...state.clients];
+  if(state.filterRAG!=='all')list=list.filter(c=>c.rag===state.filterRAG);
+  if(state.filterSearch){const q=state.filterSearch.toLowerCase();list=list.filter(c=>(c.sigla+' '+c.ragione_sociale).toLowerCase().includes(q));}
+  const s=state.filterSort;
+  if(s==='name')list.sort((a,b)=>a.sigla.localeCompare(b.sigla));
+  else if(s==='cert'){list.sort((a,b)=>{const da=parseD(a.scadenza_cert),db=parseD(b.scadenza_cert);if(!da&&!db)return 0;if(!da)return 1;if(!db)return-1;return da-db;});}
+  else{list.sort((a,b)=>{const o={red:0,amber:1,green:2};return(o[a.rag]??2)-(o[b.rag]??2);});}
+  return list;
+}
+
 // ===== RENDERING =====
 function render(){
   const app=document.getElementById('app');
@@ -291,7 +384,7 @@ function render(){
   app.innerHTML=rHeader()+rStats()+rTabs()+rActiveTab();
   attachListeners();
 }
-function rLogin(){return '<div class="login-screen"><div class="logo">GB Consulting</div><div class="tagline">Cruscotto Portafoglio Clienti</div><button class="btn btn-primary" onclick="login()">Accedi con Google</button><div class="note">Accesso in sola lettura ai Golden Record su Google Drive e al calendario Google. Nessun dato viene modificato.</div></div>';}
+function rLogin(){return '<div class="login-screen"><div class="logo">GB Consulting</div><div class="tagline">Cruscotto Portafoglio Clienti</div><button class="btn btn-primary" onclick="login()">Accedi con Google</button><div class="note">Accesso in sola lettura ai Golden Record su Google Drive e al calendario Google.</div></div>';}
 function rHeader(){const t=state.lastRefresh?state.lastRefresh.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'--';return '<header><div><h1>GB Consulting</h1><div class="subtitle">Cruscotto Portafoglio — Aggiornato: '+t+'</div></div><div class="actions"><button class="btn btn-outline" onclick="loadData()">&#8635; Aggiorna</button><button class="btn btn-outline" onclick="logout()">Esci</button></div></header>';}
 function rLoading(){return '<div class="loading"><div class="spinner"></div><div>'+esc(state.loadingMsg)+'</div></div>';}
 function rStats(){
@@ -302,19 +395,25 @@ function rStats(){
 function rTabs(){
   return '<div class="tabs">'+[{id:'dashboard',l:'Dashboard'},{id:'timeline',l:'Scadenze'},{id:'calendar',l:'Calendario'}].map(t=>'<button class="tab'+(state.activeTab===t.id?' active':'')+'" data-tab="'+t.id+'">'+t.l+'</button>').join('')+'</div>';
 }
+function rFilterBar(){
+  return '<div class="filter-bar"><input type="text" placeholder="Cerca cliente..." value="'+esc(state.filterSearch)+'" id="searchInput"><select id="filterRAG"><option value="all"'+(state.filterRAG==='all'?' selected':'')+'>Tutti gli stati</option><option value="red"'+(state.filterRAG==='red'?' selected':'')+'>Critici</option><option value="amber"'+(state.filterRAG==='amber'?' selected':'')+'>Attenzione</option><option value="green"'+(state.filterRAG==='green'?' selected':'')+'>OK</option></select><select id="filterSort"><option value="rag"'+(state.filterSort==='rag'?' selected':'')+'>Ordina: Stato</option><option value="name"'+(state.filterSort==='name'?' selected':'')+'>Ordina: Nome</option><option value="cert"'+(state.filterSort==='cert'?' selected':'')+'>Ordina: Scadenza cert.</option></select></div>';
+}
 function rActiveTab(){
-  if(state.activeTab==='dashboard')return rDash();
+  if(state.activeTab==='dashboard')return rFilterBar()+rDash();
   if(state.activeTab==='timeline')return rTimeline();
   if(state.activeTab==='calendar')return rCal();
   return '';
 }
 function rDash(){
-  if(!state.clients.length)return '<div class="loading"><p>Nessun Golden Record trovato.</p></div>';
-  return '<div class="client-grid">'+state.clients.map(rCard).join('')+'</div>'+(state.detailClient?rDetail(state.detailClient):'');
+  const filtered=getFilteredClients();
+  if(!filtered.length)return '<div class="loading"><p>Nessun cliente trovato.</p></div>';
+  return '<div class="client-grid">'+filtered.map(rCard).join('')+'</div>'+(state.detailClient?rDetail(state.detailClient):'');
 }
 function rCard(c){
   const alerts=c.alerts.slice(0,2).map(a=>'<div class="alert-item"><span>'+({critical:'🔴',warning:'⚠️',info:'ℹ️'}[a.type]||'ℹ️')+'</span><span>'+esc(a.text)+'</span></div>').join('');
-  return '<div class="client-card" data-sigla="'+c.sigla+'"><div class="card-header"><div class="rag-dot '+c.rag+'"></div><div class="card-sigla">'+esc(c.sigla)+'</div><div class="card-nome">'+esc(c.ragione_sociale)+'</div></div><div class="card-body"><div class="field"><span class="fl">Mandato</span><span class="fv">'+esc(c.mandato_tipo||c.fase||'--')+'</span></div><div class="field"><span class="fl">Scad. cert.</span><span class="fv">'+esc(c.scadenza_cert||'--')+'</span></div><div class="field"><span class="fl">Prossimo audit</span><span class="fv">'+esc(c.prossimo_audit||'--')+'</span></div><div class="field"><span class="fl">NC aperte</span><span class="fv">'+c.nc_aperte.length+'</span></div><div class="field"><span class="fl">GAP aperti</span><span class="fv">'+c.gap_aperti.length+'</span></div><div class="field"><span class="fl">Rischio</span><span class="fv">'+esc(c.profilo_rischio||'--')+'</span></div></div>'+(alerts?'<div class="card-alerts">'+alerts+'</div>':'')+'</div>';
+  const note=getNote(c.sigla);
+  const overrideTag=c._ragOverride?'<span class="tag tag-blue" style="margin-left:8px;font-size:.65rem">OVERRIDE</span>':'';
+  return '<div class="client-card" data-sigla="'+c.sigla+'"><div class="card-header"><div class="rag-dot '+c.rag+'"></div><div class="card-sigla">'+esc(c.sigla)+overrideTag+'</div><div class="card-nome">'+esc(c.ragione_sociale)+'</div></div><div class="card-body"><div class="field"><span class="fl">Mandato</span><span class="fv">'+esc(c.mandato_tipo||c.fase||'--')+'</span></div><div class="field"><span class="fl">Scad. cert.</span><span class="fv">'+esc(c.scadenza_cert||'--')+'</span></div><div class="field"><span class="fl">Prossimo audit</span><span class="fv">'+esc(c.prossimo_audit||'--')+'</span></div><div class="field"><span class="fl">NC aperte</span><span class="fv">'+c.nc_aperte.length+'</span></div><div class="field"><span class="fl">GAP aperti</span><span class="fv">'+c.gap_aperti.length+'</span></div><div class="field"><span class="fl">Rischio</span><span class="fv">'+esc(c.profilo_rischio||'--')+'</span></div></div>'+(alerts?'<div class="card-alerts">'+alerts+'</div>':'')+(note?'<div class="card-note">📝 '+esc(note.substring(0,80))+(note.length>80?'...':'')+'</div>':'')+'</div>';
 }
 function rDetail(c){
   const sist=c.sistemi.map(s=>'<tr><td>'+esc(s.nome)+'</td><td>'+esc(s.stato)+'</td></tr>').join('')||'<tr><td colspan="2">N/D</td></tr>';
@@ -322,13 +421,29 @@ function rDetail(c){
   const gap=c.gap_aperti.map(g=>'<li><span class="tag '+(g.priority==='alta'?'tag-red':'tag-amber')+'">'+esc(g.id)+'</span> '+esc(g.desc)+'</li>').join('')||'<li>Nessuno</li>';
   const pa=c.punti_aperti.map(p=>'<li><span class="tag tag-red">'+esc(p.scadenza||'--')+'</span> '+esc(p.tema)+'</li>').join('')||'<li>Nessuno</li>';
   const al=c.alerts.map(a=>'<li>'+(a.type==='critical'?'🔴':'⚠️')+' '+esc(a.text)+'</li>').join('')||'<li>Nessuna</li>';
-  return '<div class="detail-overlay open" onclick="closeDetail(event)"><div class="detail-panel" onclick="event.stopPropagation()"><button class="close-btn" onclick="closeDetail()">&times;</button><div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><div class="rag-dot '+c.rag+'" style="width:18px;height:18px"></div><h2>'+esc(c.sigla)+'</h2></div><div class="detail-subtitle">'+esc(c.ragione_sociale)+'</div><div class="detail-section"><h3>Anagrafica</h3><table><tr><td>Settore</td><td>'+esc(c.settore||'--')+'</td></tr><tr><td>Sede</td><td>'+esc(c.sede||'--')+'</td></tr><tr><td>Dimensione</td><td>'+esc(c.dimensione||'--')+'</td></tr><tr><td>Rischio</td><td>'+esc(c.profilo_rischio||'--')+'</td></tr><tr><td>Mandato</td><td>'+esc(c.mandato_tipo||'--')+'</td></tr></table></div><div class="detail-section"><h3>Sistemi di Gestione</h3><table>'+sist+'</table></div><div class="detail-section"><h3>Scadenze</h3><table><tr><td>Certificazione</td><td>'+esc(c.scadenza_cert||'--')+'</td></tr><tr><td>Prossimo audit</td><td>'+esc(c.prossimo_audit||'--')+'</td></tr><tr><td>Prossimo riesame</td><td>'+esc(c.prossimo_riesame||'--')+'</td></tr></table></div><div class="detail-section"><h3>NC ('+c.nc_aperte.length+')</h3><ul class="detail-issues">'+nc+'</ul></div><div class="detail-section"><h3>GAP ('+c.gap_aperti.length+')</h3><ul class="detail-issues">'+gap+'</ul></div><div class="detail-section"><h3>Punti Aperti Critici ('+c.punti_aperti.length+')</h3><ul class="detail-issues">'+pa+'</ul></div><div class="detail-section"><h3>Segnalazioni ('+c.alerts.length+')</h3><ul class="detail-issues">'+al+'</ul></div><div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--grigio-l);font-size:.78rem;color:var(--grigio-testo)">File: '+esc(c._fileName||'--')+'<br>Ultima modifica: '+(c._modifiedTime?new Date(c._modifiedTime).toLocaleDateString('it-IT'):'--')+'</div></div></div>';
+  const curNote=getNote(c.sigla);
+  const curOverride=getRAGOverride(c.sigla);
+  const ragSel=(v)=>curOverride===v?' selected':'';
+  const autoSel=!curOverride?' selected':'';
+
+  return '<div class="detail-overlay open" onclick="closeDetail(event)"><div class="detail-panel" onclick="event.stopPropagation()"><button class="close-btn" onclick="closeDetail()">&times;</button><div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><div class="rag-dot '+c.rag+'" style="width:18px;height:18px"></div><h2>'+esc(c.sigla)+'</h2>'+(c._ragOverride?'<span class="tag tag-blue">OVERRIDE</span>':'')+'</div><div class="detail-subtitle">'+esc(c.ragione_sociale)+'</div>'+
+  '<div class="detail-section"><h3>Stato RAG</h3><div class="rag-override"><div class="rag-btn auto'+autoSel+'" onclick="setRAG(\''+c.sigla+'\',null)" title="Automatico">A</div><div class="rag-btn rb'+(curOverride==='red'?' selected':'')+'" onclick="setRAG(\''+c.sigla+'\',\'red\')" title="Critico"></div><div class="rag-btn ab'+(curOverride==='amber'?' selected':'')+'" onclick="setRAG(\''+c.sigla+'\',\'amber\')" title="Attenzione"></div><div class="rag-btn gb'+(curOverride==='green'?' selected':'')+'" onclick="setRAG(\''+c.sigla+'\',\'green\')" title="OK"></div><span style="font-size:.78rem;color:var(--grigio-testo);margin-left:8px">'+(curOverride?'Override manuale':'Calcolato automaticamente')+'</span></div></div>'+
+  '<div class="detail-section"><h3>Note</h3><textarea class="note-area" id="noteArea" placeholder="Aggiungi note per '+esc(c.sigla)+'...">'+esc(curNote)+'</textarea><button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="saveNote(\''+c.sigla+'\')">Salva nota</button></div>'+
+  '<div class="detail-section"><h3>Crea Reminder</h3><div class="reminder-form"><input type="text" id="reminderTitle" placeholder="Titolo (es. Follow-up audit '+esc(c.sigla)+')"><input type="date" id="reminderDate"><button class="btn btn-primary btn-sm" onclick="addReminder(\''+c.sigla+'\')">Crea evento</button></div></div>'+
+  '<div class="detail-section"><h3>Anagrafica</h3><table><tr><td>Settore</td><td>'+esc(c.settore||'--')+'</td></tr><tr><td>Sede</td><td>'+esc(c.sede||'--')+'</td></tr><tr><td>Dimensione</td><td>'+esc(c.dimensione||'--')+'</td></tr><tr><td>Rischio</td><td>'+esc(c.profilo_rischio||'--')+'</td></tr><tr><td>Mandato</td><td>'+esc(c.mandato_tipo||'--')+'</td></tr></table></div>'+
+  '<div class="detail-section"><h3>Sistemi di Gestione</h3><table>'+sist+'</table></div>'+
+  '<div class="detail-section"><h3>Scadenze</h3><table><tr><td>Certificazione</td><td>'+esc(c.scadenza_cert||'--')+'</td></tr><tr><td>Prossimo audit</td><td>'+esc(c.prossimo_audit||'--')+'</td></tr><tr><td>Prossimo riesame</td><td>'+esc(c.prossimo_riesame||'--')+'</td></tr></table></div>'+
+  '<div class="detail-section"><h3>NC ('+c.nc_aperte.length+')</h3><ul class="detail-issues">'+nc+'</ul></div>'+
+  '<div class="detail-section"><h3>GAP ('+c.gap_aperti.length+')</h3><ul class="detail-issues">'+gap+'</ul></div>'+
+  '<div class="detail-section"><h3>Punti Aperti ('+c.punti_aperti.length+')</h3><ul class="detail-issues">'+pa+'</ul></div>'+
+  '<div class="detail-section"><h3>Segnalazioni ('+c.alerts.length+')</h3><ul class="detail-issues">'+al+'</ul></div>'+
+  '<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--grigio-l);font-size:.78rem;color:var(--grigio-testo)">File: '+esc(c._fileName||'--')+'<br>Ultima modifica: '+(c._modifiedTime?new Date(c._modifiedTime).toLocaleDateString('it-IT'):'--')+'</div></div></div>';
 }
 function rTimeline(){
   const items=[],now=new Date();
   for(const c of state.clients){
     if(c.scadenza_cert){const d=parseD(c.scadenza_cert);if(d&&d>now)items.push({date:d,sigla:c.sigla,desc:'Scadenza certificazione',type:'cert'});}
-    if(c.prossimo_audit){const d=parseD(c.prossimo_audit);if(d)items.push({date:d,sigla:c.sigla,desc:'Audit',type:'audit'});}
+    if(c.prossimo_audit){const d=parseD(c.prossimo_audit);if(d)items.push({date:d,sigla:c.sigla,desc:'Audit',type:d<now?'overdue':'audit'});}
     for(const p of c.punti_aperti)if(p.scadenza){const d=parseD(p.scadenza);if(d)items.push({date:d,sigla:c.sigla,desc:p.tema,type:d<now?'overdue':'task'});}
   }
   for(const ev of state.events.filter(e=>e.isCompliance))items.push({date:new Date(ev.start),sigla:'',desc:ev.title,type:'cal'});
@@ -352,11 +467,27 @@ function rCal(){
   return rg('Questa settimana',tw)+rg('Prossima settimana',nw)+rg('Prossime settimane',la);
 }
 
+// ===== EVENT HANDLING =====
 function attachListeners(){
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{state.activeTab=t.dataset.tab;render();}));
   document.querySelectorAll('.client-card').forEach(c=>c.addEventListener('click',()=>{state.detailClient=state.clients.find(x=>x.sigla===c.dataset.sigla);render();}));
+  const si=document.getElementById('searchInput');
+  if(si)si.addEventListener('input',e=>{state.filterSearch=e.target.value;render();document.getElementById('searchInput')?.focus();});
+  const fr=document.getElementById('filterRAG');
+  if(fr)fr.addEventListener('change',e=>{state.filterRAG=e.target.value;render();});
+  const fs=document.getElementById('filterSort');
+  if(fs)fs.addEventListener('change',e=>{state.filterSort=e.target.value;render();});
 }
 function closeDetail(e){if(e&&e.target!==e.currentTarget)return;state.detailClient=null;render();}
+function saveNote(sigla){const ta=document.getElementById('noteArea');if(ta){setNote(sigla,ta.value);toast('Nota salvata per '+sigla);render();}}
+function setRAG(sigla,val){setRAGOverride(sigla,val);const c=state.clients.find(x=>x.sigla===sigla);if(c){if(val){c.rag=val;c._ragOverride=true;}else{c._ragOverride=false;calcRAG(c);}state.detailClient=c;render();}}
+function addReminder(sigla){
+  const ti=document.getElementById('reminderTitle');
+  const da=document.getElementById('reminderDate');
+  if(!ti||!da||!ti.value||!da.value){toast('Inserisci titolo e data');return;}
+  createCalEvent(ti.value,da.value,sigla);
+}
+function toast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
 function esc(s){if(!s)return '';const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
 initAuth();render();
