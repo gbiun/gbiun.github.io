@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GB Consulting — Cruscotto Portafoglio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#001E33;--navy-l:#1A3A5C;--azzurro:#2E6DA4;
+  --grigio-l:#F0F3F6;--verde:#1A7A4A;--ambra:#C8880A;--rosso:#A01E1E;
+  --bianco:#FFFFFF;--grigio-bordo:#D1D9E0;--grigio-testo:#5A6A7A;
+  --verde-bg:#E8F5EE;--ambra-bg:#FFF8E8;--rosso-bg:#FDE8E8;--azzurro-bg:#E3EFF8;
+  --font-d:'DM Serif Display',Georgia,serif;
+  --font-b:'DM Sans',system-ui,sans-serif;
+  --sh-sm:0 1px 3px rgba(0,30,51,.08);
+  --sh-md:0 4px 12px rgba(0,30,51,.10);
+  --rad:10px;
+}
+html{font-size:15px}
+body{font-family:var(--font-b);background:var(--grigio-l);color:var(--navy);min-height:100vh}
+a{color:var(--azzurro);text-decoration:none}
+a:hover{text-decoration:underline}
+.app{max-width:1280px;margin:0 auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--navy);border-radius:var(--rad);margin-bottom:24px;color:var(--bianco)}
+header h1{font-family:var(--font-d);font-size:1.4rem;font-weight:400;letter-spacing:.3px}
+header .subtitle{font-size:.8rem;opacity:.6;margin-top:2px}
+header .actions{display:flex;gap:10px;align-items:center}
+.btn{font-family:var(--font-b);font-size:.85rem;font-weight:500;padding:8px 16px;border-radius:6px;border:none;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--azzurro);color:var(--bianco)}
+.btn-primary:hover{background:#2560A0}
+.btn-outline{background:transparent;color:var(--bianco);border:1px solid rgba(255,255,255,.3)}
+.btn-outline:hover{border-color:rgba(255,255,255,.6)}
+.login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center}
+.login-screen .logo{font-family:var(--font-d);font-size:2.2rem;color:var(--navy);margin-bottom:8px}
+.login-screen .tagline{color:var(--grigio-testo);margin-bottom:32px;font-size:.95rem}
+.login-screen .btn{font-size:1rem;padding:12px 28px}
+.login-screen .note{margin-top:16px;font-size:.78rem;color:var(--grigio-testo);max-width:380px}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bianco);border-radius:var(--rad);padding:16px 20px;box-shadow:var(--sh-sm)}
+.stat-card .label{font-size:.75rem;color:var(--grigio-testo);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat-card .value{font-family:var(--font-d);font-size:1.6rem}
+.stat-card.red .value{color:var(--rosso)}
+.stat-card.amber .value{color:var(--ambra)}
+.stat-card.green .value{color:var(--verde)}
+.tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--grigio-bordo);padding-bottom:0}
+.tab{padding:10px 18px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;background:none;color:var(--grigio-testo);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab.active{color:var(--navy);border-bottom-color:var(--azzurro)}
+.tab:hover:not(.active){color:var(--navy-l)}
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.client-card{background:var(--bianco);border-radius:var(--rad);box-shadow:var(--sh-sm);overflow:hidden;transition:box-shadow .2s;cursor:pointer}
+.client-card:hover{box-shadow:var(--sh-md)}
+.client-card .card-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--grigio-l)}
+.rag-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.rag-dot.red{background:var(--rosso)}.rag-dot.amber{background:var(--ambra)}.rag-dot.green{background:var(--verde)}
+.client-card .card-sigla{font-family:var(--font-d);font-size:1.1rem}
+.client-card .card-nome{font-size:.82rem;color:var(--grigio-testo);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.client-card .card-body{padding:14px 20px;font-size:.82rem;line-height:1.5}
+.client-card .card-body .field{display:flex;justify-content:space-between;padding:3px 0}
+.client-card .card-body .field .fl{color:var(--grigio-testo)}
+.client-card .card-body .field .fv{font-weight:500;text-align:right;max-width:60%}
+.card-alerts{padding:10px 20px 14px;border-top:1px solid var(--grigio-l)}
+.card-alerts .alert-item{font-size:.78rem;padding:3px 0;display:flex;gap:6px;align-items:flex-start}
+.detail-overlay{position:fixed;inset:0;background:rgba(0,30,51,.4);z-index:100;display:none;justify-content:flex-end}
+.detail-overlay.open{display:flex}
+.detail-panel{width:560px;max-width:90vw;background:var(--bianco);height:100%;overflow-y:auto;padding:28px;animation:slideIn .25s ease;position:relative}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.detail-panel .close-btn{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--grigio-testo)}
+.detail-panel h2{font-family:var(--font-d);font-size:1.4rem;margin-bottom:4px}
+.detail-panel .detail-subtitle{color:var(--grigio-testo);font-size:.85rem;margin-bottom:20px}
+.detail-section{margin-bottom:20px}
+.detail-section h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;color:var(--grigio-testo);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--grigio-l)}
+.detail-section table{width:100%;border-collapse:collapse;font-size:.82rem}
+.detail-section table td{padding:5px 0;vertical-align:top}
+.detail-section table td:first-child{color:var(--grigio-testo);width:40%;padding-right:12px}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:500}
+.tag-red{background:var(--rosso-bg);color:var(--rosso)}
+.tag-amber{background:var(--ambra-bg);color:var(--ambra)}
+.tag-green{background:var(--verde-bg);color:var(--verde)}
+.tag-blue{background:var(--azzurro-bg);color:var(--azzurro)}
+.detail-issues{list-style:none}
+.detail-issues li{padding:6px 0;border-bottom:1px solid var(--grigio-l);font-size:.82rem;display:flex;gap:8px;align-items:flex-start}
+.detail-issues li:last-child{border:none}
+.timeline-container{background:var(--bianco);border-radius:var(--rad);padding:24px;box-shadow:var(--sh-sm)}
+.timeline-month{margin-bottom:20px}
+.timeline-month h3{font-family:var(--font-d);font-size:1rem;margin-bottom:10px;color:var(--navy-l)}
+.timeline-item{display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--grigio-l);font-size:.85rem;align-items:center}
+.timeline-item:last-child{border:none}
+.timeline-date{font-weight:600;min-width:60px;color:var(--navy)}
+.timeline-sigla{font-weight:600;min-width:50px;color:var(--azzurro)}
+.timeline-desc{flex:1;color:var(--grigio-testo)}
+.timeline-badge{font-size:.72rem;padding:2px 8px;border-radius:4px;font-weight:500;white-space:nowrap}
+.cal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.cal-event{background:var(--bianco);border-radius:8px;padding:14px 18px;box-shadow:var(--sh-sm);border-left:4px solid var(--azzurro)}
+.cal-event.compliance{border-left-color:var(--verde)}
+.cal-event .cal-date{font-size:.78rem;color:var(--grigio-testo);margin-bottom:4px}
+.cal-event .cal-title{font-weight:600;font-size:.9rem;margin-bottom:2px}
+.cal-event .cal-detail{font-size:.8rem;color:var(--grigio-testo)}
+.loading{text-align:center;padding:60px 20px;color:var(--grigio-testo)}
+.spinner{width:36px;height:36px;border:3px solid var(--grigio-bordo);border-top-color:var(--azzurro);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:640px){
+  header{flex-direction:column;gap:12px;text-align:center}
+  .client-grid{grid-template-columns:1fr}
+  .detail-panel{width:100%}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const CONFIG={
+  CLIENT_ID:'1083963361193-cgv85mduiglo8fs1pnbs0to3mnojgkdd.apps.googleusercontent.com',
+  SCOPES:'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/calendar.events'
+};
+let state={loggedIn:false,loading:false,loadingMsg:'',clients:[],events:[],activeTab:'dashboard',detailClient:null,lastRefresh:null};
+let tokenClient=null,accessToken=null;
+
+function initAuth(){
+  const s=document.createElement('script');
+  s.src='https://accounts.google.com/gsi/client';
+  s.onload=()=>{tokenClient=google.accounts.oauth2.initTokenClient({client_id:CONFIG.CLIENT_ID,scope:CONFIG.SCOPES,callback:handleAuth});};
+  document.head.appendChild(s);
+}
+function login(){if(tokenClient)tokenClient.requestAccessToken();}
+function handleAuth(r){if(r.error){alert('Errore: '+r.error);return;}accessToken=r.access_token;state.loggedIn=true;render();loadData();}
+function logout(){if(accessToken)google.accounts.oauth2.revoke(accessToken);accessToken=null;state={...state,loggedIn:false,clients:[],events:[],detailClient:null};render();}
+
+async function apiFetch(url){
+  const r=await fetch(url,{headers:{'Authorization':'Bearer '+accessToken}});
+  if(!r.ok)throw new Error('API '+r.status);
+  return r.json();
+}
+async function listGR(){
+  const q=encodeURIComponent("name contains 'golden_record' and mimeType='application/vnd.google-apps.document' and trashed=false");
+  const d=await apiFetch('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id,name,modifiedTime)&orderBy=modifiedTime%20desc&pageSize=50');
+  return d.files||[];
+}
+async function fetchDoc(id){
+  const d=await apiFetch('https://docs.googleapis.com/v1/documents/'+id);
+  let t='';
+  if(d.body&&d.body.content)for(const el of d.body.content){
+    if(el.paragraph&&el.paragraph.elements)for(const e of el.paragraph.elements){if(e.textRun)t+=e.textRun.content;}
+    if(el.table)for(const row of el.table.tableRows||[]){const cells=[];for(const cell of row.tableCells||[]){let ct='';for(const p of cell.content||[])if(p.paragraph&&p.paragraph.elements)for(const e of p.paragraph.elements)if(e.textRun)ct+=e.textRun.content;cells.push(ct.trim());}t+='| '+cells.join(' | ')+' |\n';}
+  }
+  return t;
+}
+function dedup(files){
+  const g={};for(const f of files){const s=f.name.split('_')[0].toUpperCase();if(!g[s]||new Date(f.modifiedTime)>new Date(g[s].modifiedTime))g[s]=f;}
+  return Object.values(g);
+}
+async function fetchCalEvents(){
+  const now=new Date(),fut=new Date(now);fut.setDate(fut.getDate()+60);
+  try{const d=await apiFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+encodeURIComponent(now.toISOString())+'&timeMax='+encodeURIComponent(fut.toISOString())+'&singleEvents=true&orderBy=startTime&maxResults=50');
+  return(d.items||[]).map(e=>({id:e.id,title:e.summary||'(senza titolo)',start:e.start?.dateTime||e.start?.date||'',end:e.end?.dateTime||e.end?.date||'',description:e.description||'',isCompliance:e.colorId==='2',location:e.location||''}));}catch(e){return[];}
+}
+
+// ===== GR PARSER =====
+function parseGR(text,fileName){
+  const c={sigla:'',ragione_sociale:'',settore:'',sede:'',dimensione:'',fase:'',sistemi:[],scadenza_cert:'',prossimo_audit:'',prossimo_riesame:'',nc_aperte:[],gap_aperti:[],punti_aperti:[],alerts:[],rag:'green',profilo_rischio:'',mandato_tipo:'',_raw:text};
+  const fn=fileName.match(/^([A-Z0-9]+)_golden_record/i);
+  if(fn)c.sigla=fn[1].toUpperCase();
+
+  // YAML frontmatter
+  const ym=text.match(/^---\s*\n([\s\S]*?)\n---/);
+  if(ym){const y=ym[1];c.sigla=yv(y,'sigla')||c.sigla;c.ragione_sociale=yv(y,'ragione_sociale')||'';c.settore=yv(y,'settore')||'';c.sede=yv(y,'sede_legale')||'';c.dimensione=yv(y,'dimensione_dipendenti')||'';}
+  // Table format fallback
+  if(!c.ragione_sociale){c.ragione_sociale=tv(text,'Ragione sociale')||hv(text)||'';c.settore=tv(text,'Settore')||'';c.sede=tv(text,'Sede legale')||tv(text,'Sede')||'';}
+
+  // Stato Compliance
+  if(text.match(/ISO 37001/i)){
+    const im=text.match(/ISO 37001\s*\|?\s*(Certificat[ao]|In corso|Implementazione[^|]*)/i);
+    c.sistemi.push({nome:'ISO 37001',stato:im?im[1].trim():'Presente'});
+  }
+  if(text.match(/D\.?Lgs\.?\s*231/i)){
+    const dm=text.match(/D\.?Lgs\.?\s*231\s*\|?\s*(Adottato|Si|Presente)/i);
+    c.sistemi.push({nome:'D.Lgs. 231',stato:dm?dm[1].trim():'Presente'});
+  }
+
+  // Scadenza cert
+  let sc=text.match(/scad(?:enza)?\.?\s*(?:cert)?\.?\s*[:=]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
+  if(!sc)sc=text.match(/cert[^|]*scad\.?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
+  if(!sc){const m2=text.match(/ABMS[^|]*scad\.?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);if(m2)sc=m2;}
+  if(sc)c.scadenza_cert=sc[1];
+
+  // Profilo rischio
+  const rk=text.match(/Rischio complessivo\s*:\s*([^\n]+)/i)||text.match(/Rischio complessivo\s*([^\n]+)/i);
+  if(rk)c.profilo_rischio=rk[1].replace(/[*_]/g,'').trim();
+
+  // Mandato tipo
+  const mt=text.match(/Tipo incarico\s*:\s*([^\n]+)/i);
+  if(mt)c.mandato_tipo=mt[1].trim();
+
+  // Fase progetto
+  const fp=text.match(/Fase progetto\s*\|\s*([^|]+)/i)||text.match(/Fase progetto\s*:\s*([^\n]+)/i);
+  if(fp)c.fase=fp[1].trim();
+
+  // Prossimo audit
+  const auditPats=[/audit\s+(?:sorveglianza|interno|RINA|certificazione)[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/gi,/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})[^.\n]*audit/gi];
+  for(const pat of auditPats){let m;while((m=pat.exec(text))!==null){const d=parseD(m[1]);if(d&&d>new Date()&&(!c.prossimo_audit||d<parseD(c.prossimo_audit)))c.prossimo_audit=m[1];}}
+
+  // Riesame
+  const rm=text.match(/[Rr]iesame\s+(?:di\s+)?[Dd]irezione[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i)||text.match(/[Rr]iesame[^.\n]*?(?:CdA|maggio|giugno|aprile)\s+(\d{4})/i);
+  if(rm)c.prossimo_riesame=rm[1];
+
+  // Transizione deadline
+  const td=text.match(/(?:deadline|scadenza)\s+(?:finale\s+)?transizione[^.\n]*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
+  if(td)c.alerts.push({type:'info',text:'Deadline transizione :2025 - '+td[1]});
+
+  // NC
+  const ncMaj=text.match(/NC\s+Maggiore/gi);
+  if(ncMaj)for(const _n of ncMaj)c.nc_aperte.push({tipo:'NC Maggiore',desc:'NC Maggiore aperta'});
+  const raccM=text.match(/(\d+)\s+rilievi?\s+IN CORSO/i);
+  if(raccM)c.alerts.push({type:'warning',text:raccM[1]+' rilievi in corso'});
+
+  // GAP (EcoEridania style)
+  const gapRe=/(?:🔴|🟡|🟠)\s*GAP-(\d+)\s*:\s*([^\n]+)/g;
+  let gm;while((gm=gapRe.exec(text))!==null){
+    const pr=text.substring(gm.index-2,gm.index+2).includes('🔴')?'alta':'media';
+    c.gap_aperti.push({id:'GAP-'+gm[1],desc:gm[2].trim().substring(0,120),priority:pr});
+  }
+
+  // Punti aperti (A4H style)
+  const paSection=extractSec(text,'Punti Aperti');
+  if(paSection){
+    const rows=paSection.match(/\|\s*\d+\s*\|[^|]+\|[^|]*(?:🔴|Alta)[^|]*/g);
+    if(rows)for(const row of rows){
+      const cols=row.split('|').map(x=>x.trim()).filter(Boolean);
+      if(cols.length>=3&&!cols[1].includes('~~')){
+        c.punti_aperti.push({tema:cols[1].replace(/\*\*/g,'').replace(/NUOVO\s*-+\s*/,'').substring(0,100),priority:'alta',scadenza:cols.length>3?cols[3]:''});
+      }
+    }
+  }
+
+  // Alerts (warning symbols)
+  const warns=text.match(/⚠️[^\n]+/g);
+  if(warns)for(const w of warns.slice(0,5)){const at=w.replace('⚠️','').trim();if(at.length>10)c.alerts.push({type:'warning',text:at.substring(0,150)});}
+
+  // GAP-06 rosso come alert critico
+  if(c.gap_aperti.some(g=>g.priority==='alta'))c.alerts.unshift({type:'critical',text:'GAP ad alta priorita aperti: '+c.gap_aperti.filter(g=>g.priority==='alta').map(g=>g.id).join(', ')});
+
+  // RAG calculation
+  calcRAG(c);
+  return c;
+}
+
+function yv(yaml,key){const m=yaml.match(new RegExp('^'+key+'\\s*:\\s*"?(.+?)"?\\s*$','mi'));return m?m[1].replace(/^["']|["']$/g,'').trim():null;}
+function tv(text,label){const m=text.match(new RegExp('\\|\\s*'+label+'\\s*\\|\\s*(.+?)\\s*\\|','i'));return m?m[1].trim():null;}
+function hv(text){const m=text.match(/^#\s+(.+?)\s*(?:--|—|$)/m);return m?m[1].trim():null;}
+function extractSec(text,heading){const m=text.match(new RegExp('##\\s*'+heading+'[\\s\\S]*?(?=\\n##\\s|$)','i'));return m?m[0]:null;}
+function parseD(s){if(!s)return null;let m=s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);m=s.match(/(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);const mo={gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};m=s.match(/(\w+)\s+(\d{4})/i);if(m&&mo[m[1].toLowerCase()]!==undefined)return new Date(+m[2],mo[m[1].toLowerCase()],15);return null;}
+
+function calcRAG(c){
+  const now=new Date(),in30=new Date(now);in30.setDate(in30.getDate()+30);
+  if(c.scadenza_cert){const d=parseD(c.scadenza_cert);if(d&&d<in30){c.rag='red';c.alerts.unshift({type:'critical',text:'Certificazione scade il '+c.scadenza_cert});return;}}
+  if(c.gap_aperti.some(g=>g.priority==='alta')){c.rag='red';return;}
+  for(const p of c.punti_aperti){if(p.priority==='alta'&&p.scadenza){const d=parseD(p.scadenza);if(d&&d<now){c.rag='red';return;}}}
+  if(c.nc_aperte.some(nc=>nc.tipo.includes('Maggiore'))){c.rag='red';return;}
+  const in60=new Date(now);in60.setDate(in60.getDate()+60);
+  if(c.scadenza_cert){const d=parseD(c.scadenza_cert);if(d&&d<in60){c.rag='amber';return;}}
+  if(c.gap_aperti.length>0||c.nc_aperte.length>0||c.punti_aperti.length>2||c.alerts.some(a=>a.type==='warning')){c.rag='amber';return;}
+  c.rag='green';
+}
+
+// ===== DATA LOADING =====
+async function loadData(){
+  state.loading=true;state.loadingMsg='Ricerca Golden Record su Google Drive...';render();
+  try{
+    const files=await listGR();const unique=dedup(files);
+    state.loadingMsg='Trovati '+unique.length+' GR. Lettura in corso...';render();
+    const clients=[];
+    for(let i=0;i<unique.length;i++){
+      state.loadingMsg='Lettura GR '+(i+1)+'/'+unique.length+': '+unique[i].name+'...';render();
+      try{const content=await fetchDoc(unique[i].id);if(content.trim().length>50){const p=parseGR(content,unique[i].name);p._fileId=unique[i].id;p._fileName=unique[i].name;p._modifiedTime=unique[i].modifiedTime;clients.push(p);}}catch(e){console.warn('Skip '+unique[i].name,e);}
+    }
+    state.loadingMsg='Lettura calendario...';render();
+    const events=await fetchCalEvents();
+    state.clients=clients.sort((a,b)=>{const o={red:0,amber:1,green:2};return(o[a.rag]??2)-(o[b.rag]??2);});
+    state.events=events;state.lastRefresh=new Date();state.loading=false;render();
+  }catch(e){console.error(e);state.loading=false;render();alert('Errore: '+e.message);}
+}
+
+// ===== RENDERING =====
+function render(){
+  const app=document.getElementById('app');
+  if(!state.loggedIn){app.innerHTML=rLogin();return;}
+  if(state.loading){app.innerHTML=rHeader()+rLoading();return;}
+  app.innerHTML=rHeader()+rStats()+rTabs()+rActiveTab();
+  attachListeners();
+}
+function rLogin(){return '<div class="login-screen"><div class="logo">GB Consulting</div><div class="tagline">Cruscotto Portafoglio Clienti</div><button class="btn btn-primary" onclick="login()">Accedi con Google</button><div class="note">Accesso in sola lettura ai Golden Record su Google Drive e al calendario Google. Nessun dato viene modificato.</div></div>';}
+function rHeader(){const t=state.lastRefresh?state.lastRefresh.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'--';return '<header><div><h1>GB Consulting</h1><div class="subtitle">Cruscotto Portafoglio — Aggiornato: '+t+'</div></div><div class="actions"><button class="btn btn-outline" onclick="loadData()">&#8635; Aggiorna</button><button class="btn btn-outline" onclick="logout()">Esci</button></div></header>';}
+function rLoading(){return '<div class="loading"><div class="spinner"></div><div>'+esc(state.loadingMsg)+'</div></div>';}
+function rStats(){
+  const t=state.clients.length,r=state.clients.filter(c=>c.rag==='red').length,a=state.clients.filter(c=>c.rag==='amber').length,g=state.clients.filter(c=>c.rag==='green').length;
+  const nc=state.clients.reduce((s,c)=>s+c.nc_aperte.length,0),ev=state.events.filter(e=>e.isCompliance).length;
+  return '<div class="stats-bar"><div class="stat-card"><div class="label">Clienti Attivi</div><div class="value">'+t+'</div></div><div class="stat-card red"><div class="label">Critici</div><div class="value">'+r+'</div></div><div class="stat-card amber"><div class="label">Attenzione</div><div class="value">'+a+'</div></div><div class="stat-card green"><div class="label">OK</div><div class="value">'+g+'</div></div><div class="stat-card"><div class="label">NC Aperte</div><div class="value">'+nc+'</div></div><div class="stat-card"><div class="label">Eventi Compliance</div><div class="value">'+ev+'</div></div></div>';
+}
+function rTabs(){
+  return '<div class="tabs">'+[{id:'dashboard',l:'Dashboard'},{id:'timeline',l:'Scadenze'},{id:'calendar',l:'Calendario'}].map(t=>'<button class="tab'+(state.activeTab===t.id?' active':'')+'" data-tab="'+t.id+'">'+t.l+'</button>').join('')+'</div>';
+}
+function rActiveTab(){
+  if(state.activeTab==='dashboard')return rDash();
+  if(state.activeTab==='timeline')return rTimeline();
+  if(state.activeTab==='calendar')return rCal();
+  return '';
+}
+function rDash(){
+  if(!state.clients.length)return '<div class="loading"><p>Nessun Golden Record trovato.</p></div>';
+  return '<div class="client-grid">'+state.clients.map(rCard).join('')+'</div>'+(state.detailClient?rDetail(state.detailClient):'');
+}
+function rCard(c){
+  const alerts=c.alerts.slice(0,2).map(a=>'<div class="alert-item"><span>'+({critical:'🔴',warning:'⚠️',info:'ℹ️'}[a.type]||'ℹ️')+'</span><span>'+esc(a.text)+'</span></div>').join('');
+  return '<div class="client-card" data-sigla="'+c.sigla+'"><div class="card-header"><div class="rag-dot '+c.rag+'"></div><div class="card-sigla">'+esc(c.sigla)+'</div><div class="card-nome">'+esc(c.ragione_sociale)+'</div></div><div class="card-body"><div class="field"><span class="fl">Mandato</span><span class="fv">'+esc(c.mandato_tipo||c.fase||'--')+'</span></div><div class="field"><span class="fl">Scad. cert.</span><span class="fv">'+esc(c.scadenza_cert||'--')+'</span></div><div class="field"><span class="fl">Prossimo audit</span><span class="fv">'+esc(c.prossimo_audit||'--')+'</span></div><div class="field"><span class="fl">NC aperte</span><span class="fv">'+c.nc_aperte.length+'</span></div><div class="field"><span class="fl">GAP aperti</span><span class="fv">'+c.gap_aperti.length+'</span></div><div class="field"><span class="fl">Rischio</span><span class="fv">'+esc(c.profilo_rischio||'--')+'</span></div></div>'+(alerts?'<div class="card-alerts">'+alerts+'</div>':'')+'</div>';
+}
+function rDetail(c){
+  const sist=c.sistemi.map(s=>'<tr><td>'+esc(s.nome)+'</td><td>'+esc(s.stato)+'</td></tr>').join('')||'<tr><td colspan="2">N/D</td></tr>';
+  const nc=c.nc_aperte.map(n=>'<li><span class="tag tag-red">'+esc(n.tipo)+'</span> '+esc(n.desc)+'</li>').join('')||'<li>Nessuna</li>';
+  const gap=c.gap_aperti.map(g=>'<li><span class="tag '+(g.priority==='alta'?'tag-red':'tag-amber')+'">'+esc(g.id)+'</span> '+esc(g.desc)+'</li>').join('')||'<li>Nessuno</li>';
+  const pa=c.punti_aperti.map(p=>'<li><span class="tag tag-red">'+esc(p.scadenza||'--')+'</span> '+esc(p.tema)+'</li>').join('')||'<li>Nessuno</li>';
+  const al=c.alerts.map(a=>'<li>'+(a.type==='critical'?'🔴':'⚠️')+' '+esc(a.text)+'</li>').join('')||'<li>Nessuna</li>';
+  return '<div class="detail-overlay open" onclick="closeDetail(event)"><div class="detail-panel" onclick="event.stopPropagation()"><button class="close-btn" onclick="closeDetail()">&times;</button><div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><div class="rag-dot '+c.rag+'" style="width:18px;height:18px"></div><h2>'+esc(c.sigla)+'</h2></div><div class="detail-subtitle">'+esc(c.ragione_sociale)+'</div><div class="detail-section"><h3>Anagrafica</h3><table><tr><td>Settore</td><td>'+esc(c.settore||'--')+'</td></tr><tr><td>Sede</td><td>'+esc(c.sede||'--')+'</td></tr><tr><td>Dimensione</td><td>'+esc(c.dimensione||'--')+'</td></tr><tr><td>Rischio</td><td>'+esc(c.profilo_rischio||'--')+'</td></tr><tr><td>Mandato</td><td>'+esc(c.mandato_tipo||'--')+'</td></tr></table></div><div class="detail-section"><h3>Sistemi di Gestione</h3><table>'+sist+'</table></div><div class="detail-section"><h3>Scadenze</h3><table><tr><td>Certificazione</td><td>'+esc(c.scadenza_cert||'--')+'</td></tr><tr><td>Prossimo audit</td><td>'+esc(c.prossimo_audit||'--')+'</td></tr><tr><td>Prossimo riesame</td><td>'+esc(c.prossimo_riesame||'--')+'</td></tr></table></div><div class="detail-section"><h3>NC ('+c.nc_aperte.length+')</h3><ul class="detail-issues">'+nc+'</ul></div><div class="detail-section"><h3>GAP ('+c.gap_aperti.length+')</h3><ul class="detail-issues">'+gap+'</ul></div><div class="detail-section"><h3>Punti Aperti Critici ('+c.punti_aperti.length+')</h3><ul class="detail-issues">'+pa+'</ul></div><div class="detail-section"><h3>Segnalazioni ('+c.alerts.length+')</h3><ul class="detail-issues">'+al+'</ul></div><div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--grigio-l);font-size:.78rem;color:var(--grigio-testo)">File: '+esc(c._fileName||'--')+'<br>Ultima modifica: '+(c._modifiedTime?new Date(c._modifiedTime).toLocaleDateString('it-IT'):'--')+'</div></div></div>';
+}
+function rTimeline(){
+  const items=[],now=new Date();
+  for(const c of state.clients){
+    if(c.scadenza_cert){const d=parseD(c.scadenza_cert);if(d&&d>now)items.push({date:d,sigla:c.sigla,desc:'Scadenza certificazione',type:'cert'});}
+    if(c.prossimo_audit){const d=parseD(c.prossimo_audit);if(d)items.push({date:d,sigla:c.sigla,desc:'Audit',type:'audit'});}
+    for(const p of c.punti_aperti)if(p.scadenza){const d=parseD(p.scadenza);if(d)items.push({date:d,sigla:c.sigla,desc:p.tema,type:d<now?'overdue':'task'});}
+  }
+  for(const ev of state.events.filter(e=>e.isCompliance))items.push({date:new Date(ev.start),sigla:'',desc:ev.title,type:'cal'});
+  items.sort((a,b)=>a.date-b.date);
+  const months={};for(const i of items){const k=i.date.toLocaleDateString('it-IT',{month:'long',year:'numeric'});if(!months[k])months[k]=[];months[k].push(i);}
+  if(!Object.keys(months).length)return '<div class="timeline-container"><p style="color:var(--grigio-testo)">Nessuna scadenza trovata.</p></div>';
+  let h='<div class="timeline-container">';
+  for(const[m,its]of Object.entries(months)){
+    h+='<div class="timeline-month"><h3>'+esc(m)+'</h3>';
+    for(const i of its){const dd=i.date.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});const bc=i.type==='overdue'?'tag-red':i.type==='cert'?'tag-amber':i.type==='audit'?'tag-blue':'tag-green';const bl=i.type==='overdue'?'SCADUTO':i.type==='cert'?'CERT':i.type==='audit'?'AUDIT':i.type==='cal'?'CAL':'TASK';
+    h+='<div class="timeline-item"><div class="timeline-date">'+dd+'</div><div class="timeline-sigla">'+esc(i.sigla)+'</div><div class="timeline-desc">'+esc(i.desc)+'</div><div class="timeline-badge tag '+bc+'">'+bl+'</div></div>';}
+    h+='</div>';
+  }
+  return h+'</div>';
+}
+function rCal(){
+  if(!state.events.length)return '<div class="timeline-container"><p style="color:var(--grigio-testo)">Nessun evento (prossimi 60 giorni).</p></div>';
+  const now=new Date(),tw=[],nw=[],la=[];
+  for(const e of state.events){const d=new Date(e.start),diff=Math.floor((d-now)/864e5);if(diff<7)tw.push(e);else if(diff<14)nw.push(e);else la.push(e);}
+  const rg=(title,evs)=>{if(!evs.length)return '';let h='<h3 style="font-family:var(--font-d);margin:20px 0 12px;color:var(--navy-l)">'+title+'</h3><div class="cal-grid">';for(const e of evs){const d=new Date(e.start);h+='<div class="cal-event'+(e.isCompliance?' compliance':'')+'"><div class="cal-date">'+d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})+' — '+(e.start.includes('T')?d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'Tutto il giorno')+'</div><div class="cal-title">'+esc(e.title)+'</div>'+(e.location?'<div class="cal-detail">📍 '+esc(e.location)+'</div>':'')+(e.isCompliance?'<div class="cal-detail"><span class="tag tag-green">Compliance</span></div>':'')+'</div>';}return h+'</div>';};
+  return rg('Questa settimana',tw)+rg('Prossima settimana',nw)+rg('Prossime settimane',la);
+}
+
+function attachListeners(){
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{state.activeTab=t.dataset.tab;render();}));
+  document.querySelectorAll('.client-card').forEach(c=>c.addEventListener('click',()=>{state.detailClient=state.clients.find(x=>x.sigla===c.dataset.sigla);render();}));
+}
+function closeDetail(e){if(e&&e.target!==e.currentTarget)return;state.detailClient=null;render();}
+function esc(s){if(!s)return '';const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+initAuth();render();
+</script>
+</body>
+</html>
