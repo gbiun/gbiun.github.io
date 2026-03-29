@@ -450,20 +450,34 @@ function rDash(){
 function mandatoBadge(m){
   if(!m)return '';
   const ml=m.toLowerCase();
-  if(ml.includes('integrat')||ml==='integrato')return '<span class="badge-mandato badge-int">INT</span>';
-  if(ml==='231'||ml.includes('231'))return '<span class="badge-mandato badge-231">231</span>';
-  if(ml==='37001'||ml.includes('37001'))return '<span class="badge-mandato badge-37001">37001</span>';
+  // Integrato: contiene esplicitamente entrambi o la parola "integrato"
+  if(ml.includes('integrat'))return '<span class="badge-mandato badge-int">INT</span>';
+  // 231 puro: contiene 231 ma non 37001
+  if((ml.includes('231')||ml.includes('odv'))&&!ml.includes('37001')&&!ml.includes('fpc'))
+    return '<span class="badge-mandato badge-231">231</span>';
+  // 37001: contiene 37001, FPC, SGPC, audit, certificazione, transizione, consulenza
+  if(ml.includes('37001')||ml.includes('fpc')||ml.includes('sgpc')||ml.includes('transizione')||ml.includes('certificaz')||ml.includes('implementaz'))
+    return '<span class="badge-mandato badge-37001">37001</span>';
   return '<span class="badge-mandato badge-other">'+esc(m.substring(0,6))+'</span>';
 }
 function auditLabel(c){
-  // Distingue audit ente (RINA/SGS/DNV) da interno
+  // Distingue audit ente (RINA/SGS/DNV) da interno cercando solo nel contesto
+  // della riga/frase che contiene la data dell'audit — non nell'intero testo
+  if(!c.prossimo_audit)return '--';
   const raw=c._raw||'';
-  if(c.prossimo_audit){
-    if(/RINA|SGS|DNV|sorveglianza|certificazione|rinnovo/i.test(raw))return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(RINA)</span>';
-    if(/interno|annuale/i.test(raw))return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(interno)</span>';
-    return c.prossimo_audit;
-  }
-  return '--';
+  const d=c.prossimo_audit.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  // Cerca la riga che contiene la data dell'audit
+  const lineRe=new RegExp('.{0,80}'+d+'.{0,80}','i');
+  const line=raw.match(lineRe)?.[0]||'';
+  // Cerca i campi c_ del YAML che indicano se è un audit ente
+  const fromYaml=raw.match(/c_prossimo_audit_ente\s*:\s*"?(.+?)"?\s*$/m)?.[1]||'';
+  const isEnte=fromYaml&&fromYaml===c.prossimo_audit;
+  const isInterno=(raw.match(/c_prossimo_audit_interno\s*:\s*"?(.+?)"?\s*$/m)?.[1]||'')=== c.prossimo_audit;
+  if(isEnte||/RINA|SGS|DNV|sorveglianza|rinnovo|certificazione/i.test(line))
+    return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(RINA)</span>';
+  if(isInterno||/interno|annuale/i.test(line))
+    return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(interno)</span>';
+  return c.prossimo_audit;
 }
 function expandField(sigla,key,label,value,detailHtml){
   const hasDetail=detailHtml&&detailHtml.length>0;
