@@ -72,6 +72,23 @@ header .actions{display:flex;gap:10px;align-items:center}
 .card-alerts{padding:10px 20px 14px;border-top:1px solid var(--grigio-l)}
 .card-alerts .alert-item{font-size:.78rem;padding:3px 0;display:flex;gap:6px;align-items:flex-start}
 .card-note{padding:8px 20px 12px;border-top:1px solid var(--grigio-l);font-size:.78rem;color:var(--azzurro);font-style:italic}
+/* Badge tipo mandato */
+.badge-mandato{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.68rem;font-weight:600;letter-spacing:.3px;margin-left:6px;vertical-align:middle}
+.badge-37001{background:var(--azzurro-bg);color:var(--azzurro)}
+.badge-231{background:var(--ambra-bg);color:var(--ambra)}
+.badge-int{background:var(--verde-bg);color:var(--verde)}
+.badge-other{background:var(--grigio-l);color:var(--grigio-testo)}
+/* Campi espandibili */
+.field{cursor:default}
+.field.expandable{cursor:pointer}
+.field.expandable:hover .fl{color:var(--navy)}
+.field .expand-icon{font-size:.65rem;color:var(--grigio-testo);margin-left:4px;transition:transform .2s;display:inline-block}
+.field.open .expand-icon{transform:rotate(90deg)}
+.field-detail{display:none;padding:5px 0 6px 0;font-size:.78rem;color:var(--grigio-testo);border-bottom:1px dashed var(--grigio-bordo);line-height:1.5}
+.field.open + .field-detail{display:block}
+.field-detail ul{list-style:none;padding:0}
+.field-detail ul li{padding:2px 0;display:flex;gap:6px;align-items:flex-start}
+.field-detail .tag{font-size:.7rem}
 .detail-overlay{position:fixed;inset:0;background:rgba(0,30,51,.4);z-index:100;display:none;justify-content:flex-end}
 .detail-overlay.open{display:flex}
 .detail-panel{width:600px;max-width:90vw;background:var(--bianco);height:100%;overflow-y:auto;padding:28px;animation:slideIn .25s ease;position:relative}
@@ -430,11 +447,62 @@ function rDash(){
   if(!filtered.length)return '<div class="loading"><p>Nessun cliente trovato.</p></div>';
   return '<div class="client-grid">'+filtered.map(rCard).join('')+'</div>'+(state.detailClient?rDetail(state.detailClient):'');
 }
+function mandatoBadge(m){
+  if(!m)return '';
+  const ml=m.toLowerCase();
+  if(ml.includes('integrat')||ml==='integrato')return '<span class="badge-mandato badge-int">INT</span>';
+  if(ml==='231'||ml.includes('231'))return '<span class="badge-mandato badge-231">231</span>';
+  if(ml==='37001'||ml.includes('37001'))return '<span class="badge-mandato badge-37001">37001</span>';
+  return '<span class="badge-mandato badge-other">'+esc(m.substring(0,6))+'</span>';
+}
+function auditLabel(c){
+  // Distingue audit ente (RINA/SGS/DNV) da interno
+  const raw=c._raw||'';
+  if(c.prossimo_audit){
+    if(/RINA|SGS|DNV|sorveglianza|certificazione|rinnovo/i.test(raw))return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(RINA)</span>';
+    if(/interno|annuale/i.test(raw))return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(interno)</span>';
+    return c.prossimo_audit;
+  }
+  return '--';
+}
+function expandField(sigla,key,label,value,detailHtml){
+  const hasDetail=detailHtml&&detailHtml.length>0;
+  const id='exp_'+sigla+'_'+key;
+  if(!hasDetail)return '<div class="field"><span class="fl">'+label+'</span><span class="fv">'+value+'</span></div>';
+  return '<div class="field expandable" onclick="toggleField(\''+id+'\')" id="'+id+'"><span class="fl">'+label+' <span class="expand-icon">▸</span></span><span class="fv">'+value+'</span></div><div class="field-detail" id="'+id+'_d">'+detailHtml+'</div>';
+}
 function rCard(c){
   const alerts=c.alerts.slice(0,2).map(a=>'<div class="alert-item"><span>'+({critical:'🔴',warning:'⚠️',info:'ℹ️'}[a.type]||'ℹ️')+'</span><span>'+esc(a.text)+'</span></div>').join('');
   const note=getNote(c.sigla);
-  const overrideTag=c._ragOverride?'<span class="tag tag-blue" style="margin-left:8px;font-size:.65rem">OVERRIDE</span>':'';
-  return '<div class="client-card" data-sigla="'+c.sigla+'"><div class="card-header"><div class="rag-dot '+c.rag+'"></div><div class="card-sigla">'+esc(c.sigla)+overrideTag+'</div><div class="card-nome">'+esc(c.ragione_sociale)+'</div></div><div class="card-body"><div class="field"><span class="fl">Mandato</span><span class="fv">'+esc(c.mandato_tipo||c.fase||'--')+'</span></div><div class="field"><span class="fl">Scad. cert.</span><span class="fv">'+esc(c.scadenza_cert||'--')+'</span></div><div class="field"><span class="fl">Prossimo audit</span><span class="fv">'+esc(c.prossimo_audit||'--')+'</span></div><div class="field"><span class="fl">NC aperte</span><span class="fv">'+c.nc_aperte.length+'</span></div><div class="field"><span class="fl">GAP aperti</span><span class="fv">'+c.gap_aperti.length+'</span></div><div class="field"><span class="fl">Rischio</span><span class="fv">'+esc(c.profilo_rischio||'--')+'</span></div></div>'+(alerts?'<div class="card-alerts">'+alerts+'</div>':'')+(note?'<div class="card-note">📝 '+esc(note.substring(0,80))+(note.length>80?'...':'')+'</div>':'')+'</div>';
+  const overrideTag=c._ragOverride?'<span class="tag tag-blue" style="margin-left:4px;font-size:.65rem">OVERRIDE</span>':'';
+  const badge=mandatoBadge(c.mandato_tipo);
+
+  // Dettagli espandibili per ogni campo
+  const mandatoDetail=c.mandato_tipo?'<div>'+esc(c.mandato_tipo)+(c.fase?' — <em>'+esc(c.fase)+'</em>':'')+'</div>':'';
+  const auditDetail=c.prossimo_audit?'<div>Data: '+esc(c.prossimo_audit)+'</div>'+(c.prossimo_riesame?'<div>Prossimo riesame: '+esc(c.prossimo_riesame)+'</div>':''):'';
+  const riesameDetail=c.prossimo_riesame?'<div>Data riesame: '+esc(c.prossimo_riesame)+'</div>'+(c.scadenza_cert?'<div>Scad. certificato: '+esc(c.scadenza_cert)+'</div>':''):'';
+  const ncDetail=c.nc_aperte.length?'<ul>'+c.nc_aperte.map(n=>'<li><span class="tag tag-red">'+esc(n.tipo)+'</span> '+esc(n.desc)+'</li>').join('')+'</ul>':'';
+  const gapDetail=c.gap_aperti.length?'<ul>'+c.gap_aperti.map(g=>'<li><span class="tag '+(g.priority==='alta'?'tag-red':'tag-amber')+'">'+esc(g.id)+'</span> '+esc(g.desc)+'</li>').join('')+'</ul>':'';
+  const rischioDetail=c.profilo_rischio?'<div>Profilo rischio: '+esc(c.profilo_rischio)+'</div>'+(c.settore?'<div>Settore: '+esc(c.settore)+'</div>':'')+(c.dimensione?'<div>Dimensione: '+esc(c.dimensione)+'</div>':''):'';
+
+  const fields=
+    expandField(c.sigla,'mandato','Mandato',esc(c.mandato_tipo?c.mandato_tipo.substring(0,30)+(c.mandato_tipo.length>30?'…':''):c.fase||'--'),mandatoDetail)+
+    expandField(c.sigla,'audit','Prossimo audit',auditLabel(c),auditDetail)+
+    expandField(c.sigla,'riesame','Prossimo riesame',esc(c.prossimo_riesame||'--'),riesameDetail)+
+    expandField(c.sigla,'nc','NC aperte',c.nc_aperte.length,ncDetail)+
+    expandField(c.sigla,'gap','GAP aperti',c.gap_aperti.length,gapDetail)+
+    expandField(c.sigla,'rischio','Rischio',esc(c.profilo_rischio||'--'),rischioDetail);
+
+  return '<div class="client-card" data-sigla="'+c.sigla+'">'+
+    '<div class="card-header" onclick="openDetail(\''+c.sigla+'\')" style="cursor:pointer">'+
+      '<div class="rag-dot '+c.rag+'"></div>'+
+      '<div class="card-sigla">'+esc(c.sigla)+overrideTag+badge+'</div>'+
+      '<div class="card-nome">'+esc(c.ragione_sociale)+'</div>'+
+    '</div>'+
+    '<div class="card-body">'+fields+'</div>'+
+    (alerts?'<div class="card-alerts">'+alerts+'</div>':'')+
+    (note?'<div class="card-note">📝 '+esc(note.substring(0,80))+(note.length>80?'...':'')+'</div>':'')+
+  '</div>';
 }
 function rDetail(c){
   const sist=c.sistemi.map(s=>'<tr><td>'+esc(s.nome)+'</td><td>'+esc(s.stato)+'</td></tr>').join('')||'<tr><td colspan="2">N/D</td></tr>';
@@ -491,13 +559,25 @@ function rCal(){
 // ===== EVENT HANDLING =====
 function attachListeners(){
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{state.activeTab=t.dataset.tab;render();}));
-  document.querySelectorAll('.client-card').forEach(c=>c.addEventListener('click',()=>{state.detailClient=state.clients.find(x=>x.sigla===c.dataset.sigla);render();}));
+  // Il click sulla card è gestito da openDetail() nel card-header — nessun listener globale sulla card
   const si=document.getElementById('searchInput');
   if(si)si.addEventListener('input',e=>{state.filterSearch=e.target.value;render();document.getElementById('searchInput')?.focus();});
   const fr=document.getElementById('filterRAG');
   if(fr)fr.addEventListener('change',e=>{state.filterRAG=e.target.value;render();});
   const fs=document.getElementById('filterSort');
   if(fs)fs.addEventListener('change',e=>{state.filterSort=e.target.value;render();});
+}
+function toggleField(id){
+  const field=document.getElementById(id);
+  const detail=document.getElementById(id+'_d');
+  if(!field||!detail)return;
+  const isOpen=field.classList.contains('open');
+  field.classList.toggle('open',!isOpen);
+  detail.style.display=isOpen?'none':'block';
+}
+function openDetail(sigla){
+  state.detailClient=state.clients.find(x=>x.sigla===sigla);
+  render();
 }
 function closeDetail(e){if(e&&e.target!==e.currentTarget)return;state.detailClient=null;render();}
 function saveNote(sigla){const ta=document.getElementById('noteArea');if(ta){setNote(sigla,ta.value);toast('Nota salvata per '+sigla);render();}}
