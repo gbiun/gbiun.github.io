@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GB Consulting — Cruscotto Portafoglio</title>
+<!-- Rev.3 — 2026-03-30 — Fix: mandatoBadge legge c_tipo_mandato, auditLabel legge c_ente_certificazione -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
@@ -269,8 +270,11 @@ function parseGR(text,fileName){
   const cv=(v)=>(!v||v==='null'||v==='--'||v==='-')?'':v; // filtra valori null-stringa
   if(ym){
     const y=ym[1];
-    c.mandato_tipo=cv(yv(y,'c_mandato'))||cv(yv(y,'c_tipo_mandato'))||'';
+    c.mandato_tipo_raw=cv(yv(y,'c_tipo_mandato'))||'';
+    c.mandato_desc=cv(yv(y,'c_mandato'))||'';
+    c.mandato_tipo=c.mandato_tipo_raw||c.mandato_desc||'';
     c.profilo_rischio=cv(yv(y,'c_rischio'))||'';
+    c.ente_cert=cv(yv(y,'c_ente_certificazione'))||'';
     const cs=cv(yv(y,'c_scadenza_cert'));if(cs)c.scadenza_cert=cs;
     // Audit: preferisce audit ente (RINA/SGS) su audit interno
     const cae=cv(yv(y,'c_prossimo_audit_ente')),cai=cv(yv(y,'c_prossimo_audit_interno'));
@@ -449,13 +453,15 @@ function rDash(){
 }
 function mandatoBadge(m){
   if(!m)return '';
-  const ml=m.toLowerCase();
-  // Integrato: contiene esplicitamente entrambi o la parola "integrato"
+  const ml=m.toLowerCase().trim();
+  // Valore strutturato da c_tipo_mandato (prioritario)
+  if(ml==='integrato')return '<span class="badge-mandato badge-int">INT</span>';
+  if(ml==='231')return '<span class="badge-mandato badge-231">231</span>';
+  if(ml==='37001')return '<span class="badge-mandato badge-37001">37001</span>';
+  // Fallback: keyword matching su c_mandato (testo lungo)
   if(ml.includes('integrat'))return '<span class="badge-mandato badge-int">INT</span>';
-  // 231 puro: contiene 231 ma non 37001
   if((ml.includes('231')||ml.includes('odv'))&&!ml.includes('37001')&&!ml.includes('fpc'))
     return '<span class="badge-mandato badge-231">231</span>';
-  // 37001: contiene 37001, FPC, SGPC, audit, certificazione, transizione, consulenza
   if(ml.includes('37001')||ml.includes('fpc')||ml.includes('sgpc')||ml.includes('transizione')||ml.includes('certificaz')||ml.includes('implementaz'))
     return '<span class="badge-mandato badge-37001">37001</span>';
   return '<span class="badge-mandato badge-other">'+esc(m.substring(0,6))+'</span>';
@@ -473,8 +479,9 @@ function auditLabel(c){
   const fromYaml=raw.match(/c_prossimo_audit_ente\s*:\s*"?(.+?)"?\s*$/m)?.[1]||'';
   const isEnte=fromYaml&&fromYaml===c.prossimo_audit;
   const isInterno=(raw.match(/c_prossimo_audit_interno\s*:\s*"?(.+?)"?\s*$/m)?.[1]||'')=== c.prossimo_audit;
-  if(isEnte||/RINA|SGS|DNV|sorveglianza|rinnovo|certificazione/i.test(line))
-    return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(RINA)</span>';
+  if(isEnte||/RINA|SGS|DNV|IMQ|sorveglianza|rinnovo|certificazione/i.test(line)){
+    const enteLabel=c.ente_cert||'ente';
+    return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">('+esc(enteLabel)+')</span>';}
   if(isInterno||/interno|annuale/i.test(line))
     return c.prossimo_audit+' <span style="font-size:.72rem;color:var(--grigio-testo)">(interno)</span>';
   return c.prossimo_audit;
@@ -492,7 +499,8 @@ function rCard(c){
   const badge=mandatoBadge(c.mandato_tipo);
 
   // Dettagli espandibili per ogni campo
-  const mandatoDetail=c.mandato_tipo?'<div>'+esc(c.mandato_tipo)+(c.fase?' — <em>'+esc(c.fase)+'</em>':'')+'</div>':'';
+  const mandatoText=c.mandato_desc||c.mandato_tipo||'';
+  const mandatoDetail=mandatoText?'<div>'+esc(mandatoText)+(c.fase?' — <em>'+esc(c.fase)+'</em>':'')+'</div>':'';
   const auditDetail=c.prossimo_audit?'<div>Data: '+esc(c.prossimo_audit)+'</div>'+(c.prossimo_riesame?'<div>Prossimo riesame: '+esc(c.prossimo_riesame)+'</div>':''):'';
   const riesameDetail=c.prossimo_riesame?'<div>Data riesame: '+esc(c.prossimo_riesame)+'</div>'+(c.scadenza_cert?'<div>Scad. certificato: '+esc(c.scadenza_cert)+'</div>':''):'';
   const ncDetail=c.nc_aperte.length?'<ul>'+c.nc_aperte.map(n=>'<li><span class="tag tag-red">'+esc(n.tipo)+'</span> '+esc(n.desc)+'</li>').join('')+'</ul>':'';
@@ -500,7 +508,7 @@ function rCard(c){
   const rischioDetail=c.profilo_rischio?'<div>Profilo rischio: '+esc(c.profilo_rischio)+'</div>'+(c.settore?'<div>Settore: '+esc(c.settore)+'</div>':'')+(c.dimensione?'<div>Dimensione: '+esc(c.dimensione)+'</div>':''):'';
 
   const fields=
-    expandField(c.sigla,'mandato','Mandato',esc(c.mandato_tipo?c.mandato_tipo.substring(0,30)+(c.mandato_tipo.length>30?'…':''):c.fase||'--'),mandatoDetail)+
+    expandField(c.sigla,'mandato','Mandato',esc(mandatoText?mandatoText.substring(0,30)+(mandatoText.length>30?'...':''):c.fase||'--'),mandatoDetail)+
     expandField(c.sigla,'audit','Prossimo audit',auditLabel(c),auditDetail)+
     expandField(c.sigla,'riesame','Prossimo riesame',esc(c.prossimo_riesame||'--'),riesameDetail)+
     expandField(c.sigla,'nc','NC aperte',c.nc_aperte.length,ncDetail)+
